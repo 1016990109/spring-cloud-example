@@ -1,0 +1,31 @@
+eureka:
+  instance:
+    hostname: localhost
+    lease-expiration-duration-in-seconds: 30 # 配置心跳间隔时间，以防服务断开一段时间 eureka 还不知觉
+    lease-renewal-interval-in-seconds: 10
+    prefer-ip-address: true # 实例名以 ip 地址形式显示，前提是不配置 instanceId
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+spring:
+  application:
+    name: feign-client
+server:
+  port: 9002
+feign:
+  hystrix:
+    enabled: true # feign 集成了熔断器，通过 feign.hystrix.enabled=true 启动
+  compression:
+    # 启用 gzip 压缩
+    response:
+      enabled: true
+    request:
+      enabled: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*" # 默认只有 info 和 health， 允许 hystrix.stream 等
+  endpoint:
+    health:
+      show-details: always # 在 health 的信息中显示详情，包括hystrix
