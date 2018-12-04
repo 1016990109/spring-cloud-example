@@ -11,8 +11,6 @@ spring:
     active: dev
 
 eureka:
-  instance:
-    instance-id: 123 # config server 配置了 overrides，故而强制使用配置服务器的 instance-id，这里显示不是 "123"
   client:
     serviceUrl:
       defaultZone: http://user:123456@localhost:8761/eureka/

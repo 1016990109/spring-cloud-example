@@ -1,4 +1,4 @@
-package cn.edu.nju;
+package cn.edu.nju.configserver;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

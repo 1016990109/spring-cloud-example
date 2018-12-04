@@ -10,8 +10,11 @@ spring:
         git:
           uri: https://github.com/1016990109/spring-cloud-example.git
           search-paths: config-repo
+        overrides:
+          eureka.instance.prefer-ip-address: true
+          eureka.instance.instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}
 
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://user:123456@localhost:8761/eureka/
