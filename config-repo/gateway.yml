@@ -2,8 +2,6 @@ server:
   port: 6604
 
 spring:
-  application:
-    name: gateway
   cloud:
     gateway:
       filter:

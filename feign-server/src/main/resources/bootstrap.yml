@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: fiegn-server
   cloud:
     config:
       retry:

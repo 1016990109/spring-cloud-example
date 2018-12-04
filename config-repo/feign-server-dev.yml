@@ -2,8 +2,6 @@ server:
   port: 9001
 
 spring:
-  application:
-    name: feign-server
   cloud:
     config:
       discovery:

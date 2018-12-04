@@ -2,3 +2,4 @@ eureka:
   instance:
     lease-expiration-duration-in-seconds: 30 # 配置心跳间隔时间，以防服务断开一段时间 eureka 还不知觉
     lease-renewal-interval-in-seconds: 10
+    instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}

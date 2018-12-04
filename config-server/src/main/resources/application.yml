@@ -12,7 +12,7 @@ spring:
           search-paths: config-repo
         overrides:
           eureka.instance.prefer-ip-address: true
-          eureka.instance.instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}
+          eureka.instance.instance-id
 
 eureka:
   client:
