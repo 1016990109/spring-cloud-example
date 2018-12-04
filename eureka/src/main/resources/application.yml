@@ -2,8 +2,6 @@ server:
   port: 8761
 eureka:
   instance:
-    hostname: localhost
-    instance-id: ${spring.cloud.client.ip-address}:${server.port} # 从 ipAddress 改为了 ip-address
     appname: eureka-server
     prefer-ip-address: true
   client:
