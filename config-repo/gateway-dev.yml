@@ -1,0 +1,39 @@
+server:
+  port: 6605
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      filter:
+        # 一些过滤器的配置
+        remove-non-proxy-headers:
+          headers: # 配置 RemoveNonProxyHeaders GatewayFilter Factory ?? 好像没有这个工厂
+          - dummy
+          - Connection
+        secure-headers: # 配置 SecureHeaders GatewayFilter Factory
+          content-security-policy: "default-src 'self' https:; font-src 'self' https: data:; img-src 'self' https: data:; object-src 'none'; script-src https:; style-src 'self' https: 'unsafe-inline'"
+      routes:
+        - id:  apifeign
+          # 重点！/info必须使用http进行转发，lb代表从注册中心获取服务
+          uri: lb://feign-server
+          predicates:
+          # 重点！转发该路径！,/feignapi/**,也可以对 Method、Cookie、Header、Query、Host、Time、RemoteAddr 做匹配
+          - Path=/feignapi/**
+          filters: # 使用 name 配置 filter，自定义（内置不带）的 filter 可在 Config.java 中使用 @Bean 注解获取一个 RouteLocator
+          - name: SecureHeaders
+          - name: RequestRateLimiter
+            args:
+              key-resolver: "#{@userKeyResolver}" # 一定需要 key-resolver 不然默认的 PrincipalNameKeyResolver 会失败
+              redis-rate-limiter.replenishRate: 1
+              redis-rate-limiter.burstCapacity: 1
+          - StripPrefix=1  # http://localhost:6604/feignapi/instance/2, 必须加上StripPrefix=1，否则访问服务时会带上 feignapi 而不是我们期望的去掉 feign，只保留**部分
+          - PrefixPath=/feign-server # 请求会转发到 /feign-server/** 上
+
+        - id:  api2user
+          uri: lb://user-service
+          predicates:
+          - Path=/userapi2/**
+          filters:
+          - StripPrefix=1
