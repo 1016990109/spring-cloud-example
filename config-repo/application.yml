@@ -1,4 +1,4 @@
 eureka:
   instance:
     prefer-ip-address: true
-    instance-id: ${spring.cloud.client.ip_address}:${spring.application.name}:${server.port}
+    instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}
