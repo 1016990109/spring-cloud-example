@@ -22,5 +22,5 @@
 /.nb-gradle/
 
 */.mvn
-*/target/
+*/target
 *.DS_Store
