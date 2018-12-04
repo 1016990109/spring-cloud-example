@@ -24,8 +24,8 @@ spring:
           - name: RequestRateLimiter
             args:
               key-resolver: "#{@userKeyResolver}" # 一定需要 key-resolver 不然默认的 PrincipalNameKeyResolver 会失败
-              redis-rate-limiter.replenishRate: 1
-              redis-rate-limiter.burstCapacity: 1
+              redis-rate-limiter.replenishRate: 100
+              redis-rate-limiter.burstCapacity: 200
           - StripPrefix=1  # http://localhost:6604/feignapi/instance/2, 必须加上StripPrefix=1，否则访问服务时会带上 feignapi 而不是我们期望的去掉 feign，只保留**部分
           - PrefixPath=/feign-server # 请求会转发到 /feign-server/** 上
 
