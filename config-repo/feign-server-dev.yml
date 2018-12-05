@@ -16,4 +16,4 @@ feign:
       enabled: true
 
 feign-server:
-  version: 0.5
+  version: 0.6
