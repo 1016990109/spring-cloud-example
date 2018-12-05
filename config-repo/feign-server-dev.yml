@@ -14,3 +14,6 @@ feign:
       enabled: true
     response:
       enabled: true
+
+feign-server:
+  version: 0.1
