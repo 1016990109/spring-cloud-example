@@ -1,6 +1,13 @@
 server:
   port: 9002
 
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: spring
+    password: 123456
+
 feign:
   hystrix:
     enabled: true # feign 集成了熔断器，通过 feign.hystrix.enabled=true 启动
@@ -10,6 +17,7 @@ feign:
       enabled: true
     request:
       enabled: true
+
 management:
   endpoints:
     web:

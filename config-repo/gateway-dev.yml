@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: gateway
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: spring
+    password: 123456
   cloud:
     gateway:
       filter:
@@ -37,3 +42,9 @@ spring:
           - Path=/userapi2/**
           filters:
           - StripPrefix=1
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

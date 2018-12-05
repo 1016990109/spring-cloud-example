@@ -13,10 +13,6 @@ spring:
       password: 123456
   profiles:
     active: dev
-  rabbitmq:
-    username: spring
-    password: 123456
-
 
 eureka:
   instance:
@@ -24,8 +20,3 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://user:123456@localhost:8761/eureka/
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
