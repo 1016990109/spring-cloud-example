@@ -1,10 +1,13 @@
-package cn.edu.nju.feignclient.dto;
+package cn.edu.nju.dto;
+
+import lombok.Data;
 
 import java.io.Serializable;
 
 /**
  * @author hongchuanwang
  */
+@Data
 public class InstanceDTO implements Serializable {
     private String serviceId;
 
@@ -17,20 +20,5 @@ public class InstanceDTO implements Serializable {
 
     public InstanceDTO(String serviceId) {
         this.serviceId = serviceId;
-    }
-
-    public String getServiceId() {
-        return serviceId;
-    }
-
-    public void setServiceId(String serviceId) {
-        this.serviceId = serviceId;
-    }
-
-    @Override
-    public String toString() {
-        return "InstanceDTO{" +
-                "serviceId='" + serviceId + '\'' +
-                '}';
     }
 }

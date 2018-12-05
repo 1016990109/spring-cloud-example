@@ -15,7 +15,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.0.RELEASE</version>
+        <version>2.1.1.RELEASE</version><!-- !!!important!!! 2.1.0.RELEASE 版本 spring-cloud-bus 的 spring-cloud-config-monitor 不会发送消息到bus上-->
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 

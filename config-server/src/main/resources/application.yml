@@ -12,8 +12,28 @@ spring:
           search-paths: config-repo
         overrides:
           eureka.instance.prefer-ip-address: true
+    bus:
+      enabled: true
+      trace:
+        enabled: true
+  security:
+    user:
+      name: config
+      password: 123456
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: spring
+    password: 123456
+
 
 eureka:
   client:
     serviceUrl:
       defaultZone: http://user:123456@localhost:8761/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
