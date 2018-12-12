@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: auth-server
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: spring
+    password: 123456
+  datasource:
+    url: jdbc:mysql://localhost:3306/oauth?characterEncoding=UTF-8
+    username: root
+    password: 12345678
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    database: 1
+    host: localhost
+    port: 6379
+
+feign:
+  hystrix:
+    enabled: true # feign 集成了熔断器，通过 feign.hystrix.enabled=true 启动
+  compression:
+    # 启用 gzip 压缩
+    response:
+      enabled: true
+    request:
+      enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*" # 默认只有 info 和 health， 允许 hystrix.stream 等
+  endpoint:
+    health:
+      show-details: always # 在 health 的信息中显示详情，包括hystrix
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://user:123456@localhost:8761/eureka/
+
+server:
+  port: 8766
