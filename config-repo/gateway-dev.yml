@@ -26,7 +26,7 @@ spring:
       routes:
         - id:  apifeign
           # 重点！/info必须使用http进行转发，lb代表从注册中心获取服务
-          uri: lb://feign-server
+          uri: lb://feign_server
           predicates:
           # 重点！转发该路径！,/feignapi/**,也可以对 Method、Cookie、Header、Query、Host、Time、RemoteAddr 做匹配
           - Path=/feignapi/**
