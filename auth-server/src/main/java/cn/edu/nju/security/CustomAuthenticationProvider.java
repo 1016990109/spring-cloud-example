@@ -3,6 +3,7 @@ package cn.edu.nju.security;
 import cn.edu.nju.api.UserServerClient;
 import cn.edu.nju.dto.UserDTO;
 import cn.edu.nju.form.LoginFormBuilder;
+import cn.edu.nju.security.bean.CustomAuthenticationToken;
 import cn.edu.nju.security.bean.CustomUser;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -18,7 +19,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.SpringSecurityMessageSource;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
@@ -56,15 +56,16 @@ public class CustomAuthenticationProvider implements AuthenticationProvider, Ini
                 throw new BadCredentialsException(this.messages.getMessage("CustomAuthenticationProvider.badCredentials", "Bad credentials"));
             }
 
-            CustomUser customUser = new CustomUser(user.getEmail(), "", AuthorityUtils.createAuthorityList("USER"));
-            return this.createSuccessAuthentication(user.getEmail(), authentication, customUser);
-        }
-    }
+            CustomUser customUser = new CustomUser.CustomUserBuilder()
+                    .setId(user.getId())
+                    .setPermissions(user.getPermissions())
+                    .setUsername(user.getUsername())
+                    .setPassword((String) authentication.getCredentials())
+                    .setAuthorities(AuthorityUtils.createAuthorityList("USER"))
+                    .createCustomUser();
 
-    private Authentication createSuccessAuthentication(Object principal, Authentication authentication, UserDetails user) {
-        UsernamePasswordAuthenticationToken result = new UsernamePasswordAuthenticationToken(principal, authentication.getCredentials(), user.getAuthorities());
-        result.setDetails(authentication.getDetails());
-        return result;
+            return new CustomAuthenticationToken(customUser);
+        }
     }
 
     @Override

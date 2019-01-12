@@ -7,7 +7,7 @@ spring:
     username: spring
     password: 123456
   datasource:
-    url: jdbc:mysql://localhost:3306/user_system?characterEncoding=UTF-8
+    url: jdbc:mysql://localhost:3306/user?characterEncoding=UTF-8
     username: root
     password: 12345678
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -16,14 +16,16 @@ spring:
         ddl-auto: none
         naming:
           implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
-          physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+          # 物理列名策略，将驼峰转为下划线
+          physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
       show-sql: true
       open-in-view: true
 
 
 feign:
   hystrix:
-    enabled: true # feign 集成了熔断器，通过 feign.hystrix.enabled=true 启动
+    # feign 集成了熔断器，通过 feign.hystrix.enabled=true 启动
+    enabled: true
   compression:
     # 启用 gzip 压缩
     response:

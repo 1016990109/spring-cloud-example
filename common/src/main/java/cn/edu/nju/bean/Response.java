@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 
 @Data
 public class Response<T> {
+    private static final int OK = 0;
     /**
      * 数据
      */
@@ -15,7 +16,7 @@ public class Response<T> {
     private int code;
 
     public Response(T res) {
-        this(HttpStatus.OK, res);
+        this(OK, res);
     }
 
     public Response(HttpStatus status, T res) {

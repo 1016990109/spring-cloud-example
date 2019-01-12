@@ -1,6 +1,6 @@
 package cn.edu.nju.service.impl;
 
-import cn.edu.nju.exception.CustomException;
+import cn.edu.nju.constant.ErrorCode;
 import cn.edu.nju.constant.UserStatus;
 import cn.edu.nju.dao.UserDao;
 import cn.edu.nju.dto.UserDTO;
@@ -8,9 +8,10 @@ import cn.edu.nju.form.AddUserForm;
 import cn.edu.nju.form.ModifyUserPasswordForm;
 import cn.edu.nju.model.UserEntity;
 import cn.edu.nju.service.UserService;
+import cn.edu.nju.vo.UserVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -21,13 +22,14 @@ import java.util.Optional;
  */
 @Service
 public class UserServiceImpl implements UserService {
+    private final UserDao userDao;
+
+    private final PasswordEncoder passwordEncoder;
+
     @Autowired
-    private UserDao userDao;
-
-    private BCryptPasswordEncoder passwordEncoder;
-
-    public UserServiceImpl() {
-        this.passwordEncoder = new BCryptPasswordEncoder();
+    public UserServiceImpl(UserDao userDao, PasswordEncoder passwordEncoder) {
+        this.userDao = userDao;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -59,24 +61,38 @@ public class UserServiceImpl implements UserService {
     public boolean modifyUserPassword(ModifyUserPasswordForm form) {
         Optional<UserEntity> userEntityOptional = userDao.findById(form.getId());
         if (!userEntityOptional.isPresent()) {
-            throw new CustomException(-1, "用户Id不存在");
+            throw ErrorCode.generateCustomException(ErrorCode.USER_NOT_EXIST);
         }
 
         UserEntity userEntity = userEntityOptional.get();
         userEntity.setPassword(passwordEncoder.encode(form.getPassword()));
+        userEntity.setModifyTime(new Timestamp(System.currentTimeMillis()));
         userDao.save(userEntity);
         return true;
     }
 
+    @Override
+    public UserVO getUserDetail(Long userId) {
+        UserEntity user = userDao.findById(userId).orElseThrow(() -> ErrorCode.generateCustomException(ErrorCode.USER_NOT_EXIST));
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(user, userVO);
+        userVO.setUserId(user.getId());
+        return userVO;
+    }
+
     private UserDTO checkUser(String rawPassword, UserEntity userEntity) {
         if (userEntity == null) {
-            throw new CustomException(-1, "用户不存在");
+            throw ErrorCode.generateCustomException(ErrorCode.USER_NOT_EXIST);
         }
 
         if (passwordEncoder.matches(rawPassword, userEntity.getPassword())) {
-            return new UserDTO(userEntity.getId(), userEntity.getEmail(), userEntity.getPhone(), 1);
+            UserDTO userDTO = new UserDTO();
+            //这里的权限另外处理
+            userDTO.setPermissions(0);
+            BeanUtils.copyProperties(userEntity, userDTO);
+            return userDTO;
         } else {
-            throw new CustomException(-1, "密码不正确");
+            throw ErrorCode.generateCustomException(ErrorCode.PASSWORD_ERROR);
         }
     }
 }

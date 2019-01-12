@@ -1,12 +1,15 @@
 package cn.edu.nju.controller;
 
 import cn.edu.nju.bean.Response;
+import cn.edu.nju.constant.RequestHeaders;
+import cn.edu.nju.dto.UserDTO;
 import cn.edu.nju.form.AddUserForm;
+import cn.edu.nju.form.LoginForm;
 import cn.edu.nju.form.ModifyUserPasswordForm;
 import cn.edu.nju.service.UserService;
-import cn.edu.nju.dto.UserDTO;
-import cn.edu.nju.form.LoginForm;
+import cn.edu.nju.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -21,12 +24,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping(value = "/user/{email}")
-    public UserDTO getUserByEmail(@PathVariable("email") String email) {
-        return new UserDTO(1L, email, "18668775879", 1);
-    }
-
-    @PostMapping(value = "/user/password/check")
+    @PostMapping("/user/password/check")
     public UserDTO checkPassword(@RequestBody LoginForm loginForm) {
         // 邮箱
         if (loginForm.getUsername().contains(AT)) {
@@ -41,13 +39,18 @@ public class UserController {
         return null;
     }
 
-    @PostMapping(value = "/user/add")
-    public Response<Boolean> addUser(@RequestBody AddUserForm form) {
+    @PostMapping("/user/add")
+    public Response<Boolean> addUser(@Validated @RequestBody AddUserForm form) {
         return new Response<>(userService.addUser(form));
     }
 
-    @PostMapping(value = "/user/password/modify")
-    public Response<Boolean> modifyUserPassword(@RequestBody ModifyUserPasswordForm form) {
+    @PostMapping("/user/password/modify")
+    public Response<Boolean> modifyUserPassword(@Validated @RequestBody ModifyUserPasswordForm form) {
         return new Response<>(userService.modifyUserPassword(form));
+    }
+
+    @GetMapping("/user/detail")
+    public Response<UserVO> getUserDetail(@RequestHeader(RequestHeaders.USER_ID) Long userId) {
+        return new Response<>(userService.getUserDetail(userId));
     }
 }

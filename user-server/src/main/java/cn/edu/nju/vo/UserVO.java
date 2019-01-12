@@ -1,20 +1,21 @@
-package cn.edu.nju.form;
+package cn.edu.nju.vo;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
+import java.sql.Timestamp;
 
 /**
  * @author hongchuanwang
  */
 @Data
-public class AddUserForm {
-    @NotBlank
+public class UserVO {
+    private Long userId;
     private String username;
-    @NotBlank
-    private String password;
     private String email;
     private String phone;
+    private Integer status;
     private String description;
     private String avatar;
+    private Timestamp createTime;
+    private Timestamp modifyTime;
 }

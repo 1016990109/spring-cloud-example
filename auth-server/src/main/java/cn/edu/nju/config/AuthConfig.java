@@ -1,5 +1,6 @@
 package cn.edu.nju.config;
 
+import cn.edu.nju.security.CustomTokenConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +13,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
+import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
@@ -60,6 +62,7 @@ public class AuthConfig extends AuthorizationServerConfigurerAdapter {
 
     /**
      * 客户端信息配置在数据库
+     *
      * @return 返回数据库中客户端信息
      */
     @Bean
@@ -73,8 +76,8 @@ public class AuthConfig extends AuthorizationServerConfigurerAdapter {
     }
 
     @Bean
-    public JwtAccessTokenConverter accessTokenConverter() {
-        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+    public AccessTokenConverter accessTokenConverter() {
+        JwtAccessTokenConverter converter = new CustomTokenConverter();
         converter.setSigningKey("key");
         return converter;
     }

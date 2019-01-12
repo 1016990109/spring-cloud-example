@@ -2,15 +2,24 @@ package cn.edu.nju.dao;
 
 import cn.edu.nju.model.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.lang.Nullable;
 
 /**
  * @author hongchuanwang
  */
 public interface UserDao extends JpaRepository<UserEntity, Long> {
-    @Nullable
+    /**
+     * 根据邮箱查找用户
+     *
+     * @param email
+     * @return
+     */
     UserEntity findByEmail(String email);
 
-    @Nullable
+    /**
+     * 根据手机查找用户
+     *
+     * @param phone
+     * @return
+     */
     UserEntity findByPhone(String phone);
 }
