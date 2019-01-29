@@ -1,6 +1,7 @@
 package cn.edu.nju.config;
 
 import cn.edu.nju.security.CustomTokenConverter;
+import cn.edu.nju.security.CustomTokenServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +14,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
-import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
@@ -55,9 +56,23 @@ public class AuthConfig extends AuthorizationServerConfigurerAdapter {
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
         endpoints.authenticationManager(authenticationManager)
+                .tokenServices(customTokenServices())
                 .tokenStore(redisTokenStore())
                 .accessTokenConverter(accessTokenConverter())
-                .reuseRefreshTokens(true);
+                // 重复使用 refresh_token 而不是刷新过 token 后连带刷新 refresh_token，只有 refresh_token 过期的时候才会刷新
+                .reuseRefreshTokens(false);
+    }
+
+    private AuthorizationServerTokenServices customTokenServices() {
+        CustomTokenServices tokenServices = new CustomTokenServices();
+        tokenServices.setTokenStore(redisTokenStore());
+        tokenServices.setSupportRefreshToken(true);
+        // 设置重用 refresh_token 为 false，否则根据 refresh_token 获取 access_token 时的 refresh_token 会返回新的，是个 bug
+        // 可以查看 issue：https://github.com/spring-projects/spring-security-oauth/issues/1193
+        tokenServices.setReuseRefreshToken(false);
+        tokenServices.setTokenEnhancer(accessTokenConverter());
+        tokenServices.setClientDetailsService(clientDetails());
+        return tokenServices;
     }
 
     /**
@@ -76,7 +91,7 @@ public class AuthConfig extends AuthorizationServerConfigurerAdapter {
     }
 
     @Bean
-    public AccessTokenConverter accessTokenConverter() {
+    public JwtAccessTokenConverter accessTokenConverter() {
         JwtAccessTokenConverter converter = new CustomTokenConverter();
         converter.setSigningKey("key");
         return converter;

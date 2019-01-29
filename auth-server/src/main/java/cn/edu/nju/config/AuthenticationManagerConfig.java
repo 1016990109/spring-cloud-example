@@ -20,5 +20,4 @@ public class AuthenticationManagerConfig extends GlobalAuthenticationConfigurerA
         //使用自定义的AuthenticationProvider
         auth.authenticationProvider(customAuthenticationProvider);
     }
-
 }
